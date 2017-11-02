@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ofeck chat</title>
+	<link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+	$(function () {
+		var socket = io();
+		$('form').submit(function(){
+			socket.emit('chat message', $('#name').val()+': ' + $('#message').val());
+			$('#message').val('');
+			return false;
+		});
+		socket.on('chat message', function(msg, userColor){
+			var newMessage = document.createElement('li');
+			newMessage.innerHTML = msg;
+			newMessage.style.color= userColor;
+			$('#conversation').append(newMessage);
+		});
+	});
+</script>
+
+<body>
+	<form class="form-inline">
+		<div class="form-group">
+			<label for="name">Name</label>
+			<input type="text" class="form-control" id="name" placeholder="Your name">
+		</div>
+		<input type="text" class="form-control" placeholder="Text input" id="message">
+		<button type="submit" class="btn btn-default">Send message</button>
+	</form>
+	<ul class="list-group" id="conversation">
+	</ul>
+</body>
+</html>
